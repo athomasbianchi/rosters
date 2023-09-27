@@ -1,11 +1,8 @@
-
 "use client"
 import { useState } from "react";
 
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
-// TODO
-//  * designate arb & '@' player type
 export default function Player({ spot, player }) {
   const { name, pos, contract } = player;
   const { years, dollars, type } = contract;
@@ -23,7 +20,13 @@ export default function Player({ spot, player }) {
         value={activePos}
       >
         {pos.map(x => {
-          return <option key={x} value={x}>{x}</option>
+          if (x.toLowerCase() !== 'dh') {
+            return (
+            <option key={x} value={x}>
+              {x.toUpperCase()}
+            </option>
+            )
+          }
         })}
         {pos.some(x => UTIL.includes(x.toLowerCase())) ?
           <option value="util">Util</option> : ''
@@ -40,9 +43,7 @@ export default function Player({ spot, player }) {
       <span>
         {years}
       </span>
-      <span>
-        {dollars}
-      </span>
+      {FormatDollars(dollars)}
     </div>
   );
 }
@@ -54,8 +55,17 @@ const ContractType = ({ contractType}) => {
 
   }
   if (contractType === "@") {
-    return (<span>@</span>)
+    return (<span><sup>@</sup></span>)
   }
 
   return "";
+}
+
+const usd = Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD'
+})
+
+const FormatDollars = (dollars) => {
+  return <span>{usd.format(dollars)}</span>
 }

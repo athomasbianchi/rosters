@@ -1,4 +1,4 @@
-import Player from './components/player'
+import Player from './components/player';
 
 const TEAM = [
   {
@@ -46,6 +46,42 @@ const TEAM = [
       dollars: 3,
       type: 'arb1'
     }
+  }, {
+    name: 'Yandy Diaz',
+    fid: '16578',
+    pos: ['1b', '3b'],
+    contract: {
+      years: 1,
+      dollars: 1,
+      type: null
+    }
+  }, {
+    name: `Ke'Bryan Hayes`,
+    fid: '18577',
+    pos: ['3b'],
+    contract: {
+      years: 1,
+      dollars: 1,
+      type: '@'
+    }
+  }, {
+    name: 'Nick Castellanos',
+    fid: '11737',
+    pos: ['of'],
+    contract: {
+      years: 1,
+      dollars: 1.4,
+      type: null
+    }
+  }, {
+    name: 'Byron Buxton',
+    fid: '14161',
+    pos: ['of'],
+    contract: {
+      years: 1,
+      dollars: 1.01,
+      type: null
+    }
   }
 
 ]
@@ -53,18 +89,6 @@ const TEAM = [
 export default function Home() {
   return (
     <main>
-      {/* <Player 
-        player={{
-          pos: ['OF', 'DH'],
-          name: 'Mike Trout',
-          contract: {
-            years: 1,
-            dollars: 25.00,
-            type: null
-          }
-        }}
-        spot="OF"
-      /> */}
       {TEAM.map((player, i) => {
         return (<Player 
           key={i}
