@@ -82,6 +82,24 @@ const TEAM = [
       dollars: 1.01,
       type: null
     }
+  }, {
+    name: "Brandon Nimmo",
+    fid: '12927',
+    pos: ['of'],
+    contract: {
+      years: 2,
+      dollars: 1,
+      type: null
+    }
+  }, {
+    name: 'Whit Merrifield',
+    fid: '11281',
+    pos: ['2b', 'of'],
+    contract: {
+      years: 1,
+      dollars: 1,
+      type: null
+    }
   }
 
 ]
@@ -99,7 +117,6 @@ export default function Home() {
           }}
         />)
       })}
-
     </main>
   )
 }
