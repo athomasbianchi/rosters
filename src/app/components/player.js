@@ -3,21 +3,17 @@ import { useState } from "react";
 
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
-export default function Player({ spot, player }) {
+export default function Player({ spot, player, handlePositionSet }) {
   const { name, pos, contract } = player;
   const { years, dollars, type } = contract;
 
-  const [activePos, setActivePos] = useState(pos[0])
-
-  const handlePositionSet = (e) => {
-    setActivePos(e.target.value);
-  }
+  console.log(spot);
 
   return (
     <div>
       <select
         onChange={handlePositionSet}
-        value={activePos}
+        value={spot}
       >
         {pos.map(x => {
           if (x.toLowerCase() !== 'dh') {
