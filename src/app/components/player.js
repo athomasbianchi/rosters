@@ -1,5 +1,4 @@
 "use client"
-import { useState } from "react";
 
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
@@ -7,39 +6,46 @@ export default function Player({ spot, player, handlePositionSet }) {
   const { name, pos, contract } = player;
   const { years, dollars, type } = contract;
 
-  console.log(spot);
-
   return (
-    <div>
-      <select
-        onChange={handlePositionSet}
-        value={spot}
-      >
-        {pos.map(x => {
-          if (x.toLowerCase() !== 'dh') {
-            return (
-            <option key={x} value={x}>
-              {x.toUpperCase()}
-            </option>
-            )
+    <div
+      style={{width: '100%', display: 'flex', justifyContent: 'flex-start'}}
+    >
+      <div style={{ marginRight: 10}}>
+        <select
+          onChange={handlePositionSet}
+          value={spot}
+        >
+          {pos.map(x => {
+            if (x.toLowerCase() !== 'dh') {
+              return (
+              <option key={x} value={x}>
+                {x.toUpperCase()}
+              </option>
+              )
+            }
+          })}
+          {pos.some(x => UTIL.includes(x.toLowerCase())) ?
+            <option value="util">Util</option> : ''
           }
-        })}
-        {pos.some(x => UTIL.includes(x.toLowerCase())) ?
-          <option value="util">Util</option> : ''
-        }
-        <option value="bench">Bench</option>
-      </select>
-      <span>
-        {" "}{name}
-      </span>
-        <ContractType contractType={type} />
-      <span>
-        {" "}{pos}
-      </span>
-      <span>
+          <option value="bench">Bench</option>
+        </select>
+      </div>
+      <div style={{ flexGrow: 2, display: 'flex', flexDirection: 'row'}}>
+
+        <div>
+          {name}
+        </div>
+          <ContractType contractType={type} />
+        <div>
+          {pos.map(x => (x.toUpperCase()))}
+        </div>
+      </div>
+      <div>
         {years}
-      </span>
-      {FormatDollars(dollars)}
+      </div>
+      <div>
+        {FormatDollars(dollars)}
+      </div>
     </div>
   );
 }
