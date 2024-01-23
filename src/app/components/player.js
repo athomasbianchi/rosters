@@ -8,43 +8,29 @@ export default function Player({ spot, player, handlePositionSet }) {
 
   return (
     <div
-      style={{width: '100%', display: 'flex', justifyContent: 'flex-start'}}
+      style={{display: 'flex'}}
     >
-      <div style={{ marginRight: 10}}>
-        <select
-          onChange={handlePositionSet}
-          value={spot}
-        >
-          {pos.map(x => {
-            if (x.toLowerCase() !== 'dh') {
-              return (
-              <option key={x} value={x}>
-                {x.toUpperCase()}
-              </option>
-              )
-            }
-          })}
-          {pos.some(x => UTIL.includes(x.toLowerCase())) ?
-            <option value="util">Util</option> : ''
-          }
-          <option value="bench">Bench</option>
-        </select>
+      {/* Roster Info */}
+      <div>{spot}</div>
+      <div>
+        {name}
       </div>
-      <div style={{ flexGrow: 2, display: 'flex', flexDirection: 'row'}}>
-
-        <div>
-          {name}
-        </div>
-          <ContractType contractType={type} />
-        <div>
-          {pos.map(x => (x.toUpperCase()))}
-        </div>
+      <div>
+        {pos.filter(x => x !== "dh").map(x => (x.toUpperCase()))}
       </div>
+      <div>
+        <button>Move</button>
+      </div>
+      {/* Contract Info */}
       <div>
         {years}
       </div>
       <div>
         {FormatDollars(dollars)}
+      </div>
+      <div>
+        {type}
+        {/* <ContractType contractType={type} /> */}
       </div>
     </div>
   );
