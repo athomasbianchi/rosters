@@ -1,5 +1,5 @@
 "use client"
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 import Player from './Player';
 
 /**
@@ -238,9 +238,6 @@ const PLAYERS = [
     level: 'maj',
     team: 'yb'
   },
-  // {
-
-  // }
 ]
 
 
@@ -250,10 +247,20 @@ const reducer = (team, action) => {
 
 export default function Team({}) {
   const [state, dispatch] = useReducer(reducer, PLAYERS);
+  const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
-  const handlePositionSet = (e) => {
-    console.log(e.target);
+  const handlePositionSet = (fid) => {
+    if (fid === selectedPlayerId) {
+      setSelectedPlayerId(null)
+    } else {
+      setSelectedPlayerId(fid);
+    }
   }
+
+  // ? how to handle moving players
+  // todo add bench
+
+  const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
 
   return (
     <div>
@@ -263,6 +270,8 @@ export default function Team({}) {
           key={player.fid}
           player={player}
           handlePositionSet={handlePositionSet}
+          activePos={selectedPlayer && selectedPlayer.pos}
+          selectedPlayer={selectedPlayerId}
         />
       ))}
     </div>

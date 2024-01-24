@@ -2,13 +2,17 @@
 
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
-export default function Player({ spot, player, handlePositionSet }) {
-  const { name, pos, contract } = player;
+export default function Player({ spot, player, handlePositionSet, activePos }) {
+  const { name, pos, contract, fid } = player;
   const { years, dollars, type } = contract;
+
+  const handleClick = (fid) => {
+    handlePositionSet(fid)
+  }
 
   return (
     <div
-      style={{display: 'flex'}}
+      style={{display: 'flex', backgroundColor: activePos && activePos.includes(spot) ? 'red' : 'white'}}
     >
       {/* Roster Info */}
       <div>{spot}</div>
@@ -19,7 +23,9 @@ export default function Player({ spot, player, handlePositionSet }) {
         {pos.filter(x => x !== "dh").map(x => (x.toUpperCase()))}
       </div>
       <div>
-        <button>Move</button>
+        <button
+          onClick={() =>handleClick(fid)}
+        >Move</button>
       </div>
       {/* Contract Info */}
       <div>
@@ -30,23 +36,9 @@ export default function Player({ spot, player, handlePositionSet }) {
       </div>
       <div>
         {type}
-        {/* <ContractType contractType={type} /> */}
       </div>
     </div>
   );
-}
-
-const ContractType = ({ contractType}) => {
-  if (!contractType) return "";
-  if (contractType.indexOf('arb') === 0) {
-    return <span><sup>{contractType[3]}</sup></span>
-
-  }
-  if (contractType === "@") {
-    return (<span><sup>@</sup></span>)
-  }
-
-  return "";
 }
 
 const usd = Intl.NumberFormat('en-US', {
