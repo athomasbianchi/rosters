@@ -28,7 +28,6 @@ const PLAYERS = [
       dollars: 1.10,
       type: null,
     },
-    slot: '1b',
     level: 'maj',
     team: 'yb'
   }, {
@@ -40,7 +39,6 @@ const PLAYERS = [
       dollars: 10.45,
       type: null
     },
-    slot: '2b',
     level: 'maj',
     team: 'yb'
   }, {
@@ -52,7 +50,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: 'ss',
     level: 'maj',
     team: 'yb'
   }, {
@@ -64,7 +61,6 @@ const PLAYERS = [
       dollars: 3,
       type: 'arb1'
     },
-    slot: 'sp',
     level: 'maj',
     team: 'yb'
   }, {
@@ -76,7 +72,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: '3b',
     level: 'maj',
     team: 'yb'
   }, {
@@ -88,7 +83,6 @@ const PLAYERS = [
       dollars: 1,
       type: '@'
     },
-    slot: '3b',
     level: 'aaa',
     team: 'yb'
   }, {
@@ -100,7 +94,6 @@ const PLAYERS = [
       dollars: 1.4,
       type: null
     },
-    slot: 'of1',
     level: 'maj',
     team: 'yb'
   }, {
@@ -112,7 +105,6 @@ const PLAYERS = [
       dollars: 1.01,
       type: null
     },
-    slot: 'of2',
     level: 'maj',
     team: 'yb'
   }, {
@@ -124,7 +116,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: 'of3',
     level: 'maj',
     team: 'yb'
   }, {
@@ -136,7 +127,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: 'bench',
     level: 'maj',
     team: 'yb'
   },
@@ -161,7 +151,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: 'sp',
     level: 'maj',
     team: 'yb'
   }, 
@@ -174,7 +163,6 @@ const PLAYERS = [
       dollars: 19,
       type: null
     },
-    slot: 'sp',
     level: 'maj',
     team: 'yb'
   }, {
@@ -186,7 +174,6 @@ const PLAYERS = [
       dollars: 9.25,
       type: null
     },
-    slot: 'sp',
     level: 'maj',
     team: 'yb'
   }, {
@@ -198,7 +185,6 @@ const PLAYERS = [
       dollars: 5.25,
       type: null
     },
-    slot: 'sp',
     level: 'maj',
     team: 'yb'
   }, {
@@ -210,7 +196,6 @@ const PLAYERS = [
       dollars: 4,
       type: null
     },
-    slot: 'rp1',
     level: 'maj',
     team: 'yb'
   }, {
@@ -222,7 +207,6 @@ const PLAYERS = [
       dollars: 5.75,
       type: null,
     },
-    slot: 'rp2',
     level: 'maj',
     team: 'yb'
   }, {
@@ -234,7 +218,6 @@ const PLAYERS = [
       dollars: 1,
       type: null
     },
-    slot: 'bench',
     level: 'maj',
     team: 'yb'
   },
@@ -246,7 +229,7 @@ const reducer = (team, action) => {
 }
 
 export default function Team({}) {
-  const [state, dispatch] = useReducer(reducer, PLAYERS);
+
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const handlePositionSet = (fid) => {
@@ -264,9 +247,9 @@ export default function Team({}) {
 
   return (
     <div>
-      {state.filter(x => x.level === 'maj').sort(rosterSort).map(player => (
+      {PLAYERS.filter(x => x.level === 'maj').sort(rosterSort).map(player => (
         <Player
-          spot={player.slot}
+          spot="bench"
           key={player.fid}
           player={player}
           handlePositionSet={handlePositionSet}
@@ -291,6 +274,21 @@ const lookup = {
   'sp': 10,
   'rp1': 11,
   'rp2': 12,
+  'bench': 13
+}
+const roster_slots = {
+  'c': null,
+  '1b': null,
+  '2b': null,
+  'ss': null,
+  '3b': null,
+  'of1': null,
+  'of2': null,
+  'of3': null,
+  'util': null,
+  'sp': null,
+  'rp1': null,
+  'rp2': null,
   'bench': 13
 }
 
