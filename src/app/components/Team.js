@@ -228,6 +228,15 @@ const reducer = (team, action) => {
 
 }
 
+function Spot({children}) {
+  return (
+    <div>
+      <span>SPOT</span>
+      {children}
+    </div>
+  )
+}
+
 export default function Team({}) {
 
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
@@ -247,6 +256,13 @@ export default function Team({}) {
 
   return (
     <div>
+      <Spot>
+        <Player
+          spot='1b'
+          player={PLAYERS.find(x => x.fid === '3473')}
+          handlePositionSet={handlePositionSet}
+        />
+      </Spot>
       {PLAYERS.filter(x => x.level === 'maj').sort(rosterSort).map(player => (
         <Player
           spot="bench"
@@ -278,7 +294,7 @@ const lookup = {
 }
 const roster_slots = {
   'c': null,
-  '1b': null,
+  '1b': '3473',
   '2b': null,
   'ss': null,
   '3b': null,
@@ -289,7 +305,7 @@ const roster_slots = {
   'sp': null,
   'rp1': null,
   'rp2': null,
-  'bench': 13
+  'bench': [],
 }
 
 function rosterSort(a,b) {
