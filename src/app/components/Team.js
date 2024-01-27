@@ -153,7 +153,7 @@ const PLAYERS = [
     },
     level: 'maj',
     team: 'yb'
-  }, 
+  },
   {
     fid: '19755',
     pos: ['sp', 'dh'],
@@ -228,17 +228,18 @@ const reducer = (team, action) => {
 
 }
 
-function Spot({children}) {
+function Spot({ pos, selectedPlayer, children }) {
   return (
-    <div>
-      <span>SPOT</span>
+    <div
+      style={{ border: selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase()) ? 'solid 1px red' : 'none'}}
+    >
+      <span>{pos}</span>
       {children}
     </div>
   )
 }
 
-export default function Team({}) {
-
+export default function Team({ }) {
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const handlePositionSet = (fid) => {
@@ -256,23 +257,32 @@ export default function Team({}) {
 
   return (
     <div>
-      <Spot>
+      {selectedPlayer && selectedPlayer.pos}
+      <Spot
+        pos={'1B'}
+        selectedPlayer={selectedPlayer}
+      >
         <Player
-          spot='1b'
           player={PLAYERS.find(x => x.fid === '3473')}
           handlePositionSet={handlePositionSet}
         />
       </Spot>
-      {PLAYERS.filter(x => x.level === 'maj').sort(rosterSort).map(player => (
-        <Player
-          spot="bench"
-          key={player.fid}
-          player={player}
-          handlePositionSet={handlePositionSet}
-          activePos={selectedPlayer && selectedPlayer.pos}
-          selectedPlayer={selectedPlayerId}
-        />
-      ))}
+      {PLAYERS
+        .filter(
+          x => x.level === 'maj' 
+          && x.fid !== '3473'
+        ).sort(rosterSort).map((player, i) => (
+          <Spot
+            pos="bench"
+            key={i}
+            selectedPlayer={selectedPlayer}
+          >
+            <Player
+              player={player}
+              handlePositionSet={handlePositionSet}
+            />
+          </Spot>
+        ))}
     </div>
   );
 }
@@ -308,6 +318,6 @@ const roster_slots = {
   'bench': [],
 }
 
-function rosterSort(a,b) {
-  return (lookup[a.slot]-lookup[b.slot]);
+function rosterSort(a, b) {
+  return (lookup[a.slot] - lookup[b.slot]);
 }

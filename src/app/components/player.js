@@ -2,7 +2,7 @@
 
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
-export default function Player({ spot, player, handlePositionSet, activePos }) {
+export default function Player({ player, handlePositionSet}) {
   const { name, pos, contract, fid } = player;
   const { years, dollars, type } = contract;
 
@@ -12,10 +12,9 @@ export default function Player({ spot, player, handlePositionSet, activePos }) {
 
   return (
     <div
-      style={{display: 'flex', backgroundColor: activePos && activePos.includes(spot) ? 'red' : 'white'}}
+      style={{display: 'flex'}}
     >
       {/* Roster Info */}
-      <div>{spot}</div>
       <div>
         {name}
       </div>
