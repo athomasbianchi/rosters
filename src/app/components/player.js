@@ -3,6 +3,7 @@
 const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
 
 export default function Player({ player, handlePositionSet}) {
+  if (!player) return ("")
   const { name, pos, contract, fid } = player;
   const { years, dollars, type } = contract;
 

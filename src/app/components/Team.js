@@ -223,23 +223,31 @@ const PLAYERS = [
   },
 ]
 
+// todo extrapolate spot from 1b to all positions
 
-const reducer = (team, action) => {
-
-}
-
-function Spot({ pos, selectedPlayer, children }) {
+function Spot({ pos, selectedPlayer, setFirstBaseId, setSelectedPlayerId, children }) {
+  const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase());
+  const handleHereClick = (id) => {
+    setFirstBaseId(id);
+    setSelectedPlayerId(null)
+  }
   return (
     <div
-      style={{ border: selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase()) ? 'solid 1px red' : 'none'}}
+      style={{ border: possibleSlot ? 'solid 1px red' : 'none'}}
     >
       <span>{pos}</span>
+      {possibleSlot && 
+        <button
+          onClick={() => handleHereClick(selectedPlayer.fid)}
+        >HERE</button>
+      }
       {children}
     </div>
   )
 }
 
 export default function Team({ }) {
+  const [firstBaseId, setFirstBaseId] = useState(null)
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const handlePositionSet = (fid) => {
@@ -250,28 +258,29 @@ export default function Team({ }) {
     }
   }
 
-  // ? how to handle moving players
-  // todo add bench
-
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
 
   return (
     <div>
+      {selectedPlayer && selectedPlayer.name}
       {selectedPlayer && selectedPlayer.pos}
       <Spot
-        pos={'1B'}
+        pos={'1b'}
         selectedPlayer={selectedPlayer}
+        setFirstBaseId={setFirstBaseId}
+        setSelectedPlayerId={setSelectedPlayerId}
       >
         <Player
-          player={PLAYERS.find(x => x.fid === '3473')}
+          player={PLAYERS.find(x => x.fid === firstBaseId)}
           handlePositionSet={handlePositionSet}
         />
       </Spot>
       {PLAYERS
         .filter(
-          x => x.level === 'maj' 
-          && x.fid !== '3473'
-        ).sort(rosterSort).map((player, i) => (
+          x => x.level === 'maj'
+        ).sort(
+          (x, y) => y.contract.dollars - x.contract.dollars
+        ).map((player, i) => (
           <Spot
             pos="bench"
             key={i}
