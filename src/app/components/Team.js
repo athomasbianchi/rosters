@@ -2,6 +2,8 @@
 import { useReducer, useState } from 'react';
 import Player from './Player';
 
+const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
+
 /**
  * 
  * Player : {
@@ -17,6 +19,7 @@ import Player from './Player';
  * }
  */
 
+// todo change players to objects lookup with fid?
 const PLAYERS = [
 
   {
@@ -225,7 +228,16 @@ const PLAYERS = [
 
 // todo extrapolate spot from 1b to all positions
 
-function Spot({ pos, selectedPlayer, setFirstBaseId, setSelectedPlayerId, children }) {
+function Spot(props) {
+  const {
+    pos,
+    selectedPlayer,
+    setFirstBaseId,
+    setSelectedPlayerId,
+    children,
+    handlePositionSet,
+    player
+  } = props;
   const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase());
   const handleHereClick = (id) => {
     setFirstBaseId(id);
@@ -233,15 +245,24 @@ function Spot({ pos, selectedPlayer, setFirstBaseId, setSelectedPlayerId, childr
   }
   return (
     <div
-      style={{ border: possibleSlot ? 'solid 1px red' : 'none'}}
+      style={{ border: possibleSlot ? 'solid 1px green' : 'none'}}
     >
       <span>{pos}</span>
-      {possibleSlot && 
+      {
+
+        <button
+          onClick={() => (console.log())}
+        >MOVE</button>
+      }
+      {
+        possibleSlot && 
         <button
           onClick={() => handleHereClick(selectedPlayer.fid)}
         >HERE</button>
       }
-      {children}
+      <Player
+        player={player}
+      />
     </div>
   )
 }
@@ -265,15 +286,10 @@ export default function Team({ }) {
       {selectedPlayer && selectedPlayer.name}
       {selectedPlayer && selectedPlayer.pos}
       <Spot
-        pos={'1b'}
+        pos='1b'
         selectedPlayer={selectedPlayer}
-        setFirstBaseId={setFirstBaseId}
-        setSelectedPlayerId={setSelectedPlayerId}
+        // player={}
       >
-        <Player
-          player={PLAYERS.find(x => x.fid === firstBaseId)}
-          handlePositionSet={handlePositionSet}
-        />
       </Spot>
       {PLAYERS
         .filter(
@@ -285,48 +301,20 @@ export default function Team({ }) {
             pos="bench"
             key={i}
             selectedPlayer={selectedPlayer}
-          >
-            <Player
-              player={player}
-              handlePositionSet={handlePositionSet}
-            />
-          </Spot>
+            player={player}
+          />
         ))}
     </div>
   );
 }
 
-const lookup = {
+const starters = {
   'c': 1,
-  '1b': 2,
-  '2b': 3,
-  'ss': 4,
-  '3b': 5,
-  'of1': 6,
-  'of2': 7,
-  'of3': 8,
-  'util': 9,
-  'sp': 10,
-  'rp1': 11,
-  'rp2': 12,
-  'bench': 13
-}
-const roster_slots = {
-  'c': null,
-  '1b': '3473',
-  '2b': null,
-  'ss': null,
-  '3b': null,
-  'of1': null,
-  'of2': null,
-  'of3': null,
-  'util': null,
-  'sp': null,
-  'rp1': null,
-  'rp2': null,
-  'bench': [],
-}
-
-function rosterSort(a, b) {
-  return (lookup[a.slot] - lookup[b.slot]);
+  '1b': 1,
+  '2b': 1,
+  'ss': 1,
+  '3b': 1,
+  'of': 3,
+  'util': 1,
+  'rp': 2,
 }

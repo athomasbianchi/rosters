@@ -1,19 +1,17 @@
 "use client"
 
-const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
-
-export default function Player({ player, handlePositionSet}) {
+export default function Player({ player }) {
   if (!player) return ("")
   const { name, pos, contract, fid } = player;
   const { years, dollars, type } = contract;
 
-  const handleClick = (fid) => {
-    handlePositionSet(fid)
-  }
 
   return (
     <div
-      style={{display: 'flex'}}
+      style={{
+        display: "inline-flex",
+        backgroundColor: 'red'
+      }}
     >
       {/* Roster Info */}
       <div>
@@ -21,11 +19,6 @@ export default function Player({ player, handlePositionSet}) {
       </div>
       <div>
         {pos.filter(x => x !== "dh").map(x => (x.toUpperCase()))}
-      </div>
-      <div>
-        <button
-          onClick={() =>handleClick(fid)}
-        >Move</button>
       </div>
       {/* Contract Info */}
       <div>
