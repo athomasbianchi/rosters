@@ -226,32 +226,26 @@ const PLAYERS = [
   },
 ]
 
+// todo handle here click to place player in 1b roster spot
 // todo extrapolate spot from 1b to all positions
 
 function Spot(props) {
   const {
     pos,
     selectedPlayer,
-    setFirstBaseId,
-    setSelectedPlayerId,
-    children,
-    handlePositionSet,
+    handleMoveClick,
     player
   } = props;
   const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase());
-  const handleHereClick = (id) => {
-    setFirstBaseId(id);
-    setSelectedPlayerId(null)
-  }
+
   return (
     <div
       style={{ border: possibleSlot ? 'solid 1px green' : 'none'}}
     >
       <span>{pos}</span>
-      {
-
+      { player &&
         <button
-          onClick={() => (console.log())}
+          onClick={() => (handleMoveClick(player.fid))}
         >MOVE</button>
       }
       {
@@ -271,15 +265,14 @@ export default function Team({ }) {
   const [firstBaseId, setFirstBaseId] = useState(null)
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
-  const handlePositionSet = (fid) => {
-    if (fid === selectedPlayerId) {
-      setSelectedPlayerId(null)
-    } else {
-      setSelectedPlayerId(fid);
-    }
-  }
-
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
+  const firstBaseman = PLAYERS.find(x => x.fid === firstBaseId);
+
+  const handleMoveClick = (fid) => {
+    console.log(fid)
+    if (fid === selectedPlayerId) setSelectedPlayerId(null);
+    else setSelectedPlayerId(fid);
+  }
 
   return (
     <div>
@@ -288,9 +281,9 @@ export default function Team({ }) {
       <Spot
         pos='1b'
         selectedPlayer={selectedPlayer}
-        // player={}
-      >
-      </Spot>
+        player={firstBaseman}
+        handleMoveClick={handleMoveClick}
+      />
       {PLAYERS
         .filter(
           x => x.level === 'maj'
@@ -302,6 +295,7 @@ export default function Team({ }) {
             key={i}
             selectedPlayer={selectedPlayer}
             player={player}
+            handleMoveClick={handleMoveClick}
           />
         ))}
     </div>
