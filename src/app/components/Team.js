@@ -234,6 +234,7 @@ function Spot(props) {
     pos,
     selectedPlayer,
     handleMoveClick,
+    handleHereClick,
     player
   } = props;
   const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase());
@@ -245,13 +246,14 @@ function Spot(props) {
       <span>{pos}</span>
       { player &&
         <button
+          style={{ backgroundColor: selectedPlayer && player && selectedPlayer.fid === player.fid ? 'blue' : 'gray'}}
           onClick={() => (handleMoveClick(player.fid))}
         >MOVE</button>
       }
       {
-        possibleSlot && 
+        possibleSlot && (!player || selectedPlayer.fid !== player.fid) && 
         <button
-          onClick={() => handleHereClick(selectedPlayer.fid)}
+          onClick={() => handleHereClick(pos, selectedPlayer.fid)}
         >HERE</button>
       }
       <Player
@@ -274,6 +276,13 @@ export default function Team({ }) {
     else setSelectedPlayerId(fid);
   }
 
+  const handleHereClick = (pos, fid) => {
+    console.log(pos);
+    console.log(fid);
+    setFirstBaseId(fid);
+    setSelectedPlayerId(null);
+  }
+
   return (
     <div>
       {selectedPlayer && selectedPlayer.name}
@@ -283,6 +292,7 @@ export default function Team({ }) {
         selectedPlayer={selectedPlayer}
         player={firstBaseman}
         handleMoveClick={handleMoveClick}
+        handleHereClick={handleHereClick}
       />
       {PLAYERS
         .filter(
@@ -296,6 +306,7 @@ export default function Team({ }) {
             selectedPlayer={selectedPlayer}
             player={player}
             handleMoveClick={handleMoveClick}
+            handleHereClick={handleHereClick}
           />
         ))}
     </div>
