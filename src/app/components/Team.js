@@ -226,8 +226,7 @@ const PLAYERS = [
   },
 ]
 
-// todo handle here click to place player in 1b roster spot
-// todo extrapolate spot from 1b to all positions
+// todo add empty bench when moving from spot
 
 function Spot(props) {
   const {
@@ -263,12 +262,20 @@ function Spot(props) {
   )
 }
 
+const defaultRoster = {
+  'c': null,
+  '1b': null,
+  '2b': null,
+}
+
 export default function Team({ }) {
-  const [firstBaseId, setFirstBaseId] = useState(null)
+  const [spots, setSpots] = useState(defaultRoster);
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
-  const firstBaseman = PLAYERS.find(x => x.fid === firstBaseId);
+
+  console.log(spots);
+  console.log(Object.keys(spots))
 
   const handleMoveClick = (fid) => {
     console.log(fid)
@@ -277,9 +284,14 @@ export default function Team({ }) {
   }
 
   const handleHereClick = (pos, fid) => {
-    console.log(pos);
-    console.log(fid);
-    setFirstBaseId(fid);
+    // console.log(pos);
+    // console.log(fid);
+    // setFirstBaseId(fid);
+    console.log(pos, fid);
+    setSpots({
+      ...spots,
+      [pos]: fid
+    })
     setSelectedPlayerId(null);
   }
 
@@ -287,16 +299,21 @@ export default function Team({ }) {
     <div>
       {selectedPlayer && selectedPlayer.name}
       {selectedPlayer && selectedPlayer.pos}
-      <Spot
-        pos='1b'
-        selectedPlayer={selectedPlayer}
-        player={firstBaseman}
-        handleMoveClick={handleMoveClick}
-        handleHereClick={handleHereClick}
-      />
+      {Object.keys(spots).map((x, i) => (
+        <Spot
+          key={`${x}${i}`}
+          pos={x}
+          selectedPlayer={selectedPlayer}
+          player={PLAYERS.find(y => y.fid === spots[x])}
+          handleMoveClick={handleMoveClick}
+          handleHereClick={handleHereClick}
+
+        />
+      ))}
       {PLAYERS
         .filter(
-          x => x.level === 'maj'
+          x => x.level === 'maj' &&
+          !Object.values(spots).includes(x.fid)
         ).sort(
           (x, y) => y.contract.dollars - x.contract.dollars
         ).map((player, i) => (
@@ -323,3 +340,4 @@ const starters = {
   'util': 1,
   'rp': 2,
 }
+
