@@ -19,7 +19,7 @@ const UTIL = ['c', '1b', '2b', '3b', 'ss', 'of', 'dh'];
  * }
  */
 
-// todo change players to objects lookup with fid?
+// ? change players to objects lookup with fid?
 const PLAYERS = [
 
   {
@@ -226,7 +226,11 @@ const PLAYERS = [
   },
 ]
 
-// todo add empty bench when moving from spot
+// todo handle of
+// todo handle util
+// todo refactor and clean up
+// todo handle move player to bench
+// todo handle "here" button logic for bench destination with player
 
 function Spot(props) {
   const {
@@ -240,17 +244,17 @@ function Spot(props) {
 
   return (
     <div
-      style={{ border: possibleSlot ? 'solid 1px green' : 'none'}}
+      style={{ border: possibleSlot ? 'solid 1px green' : 'none' }}
     >
       <span>{pos}</span>
-      { player &&
+      {player &&
         <button
-          style={{ backgroundColor: selectedPlayer && player && selectedPlayer.fid === player.fid ? 'blue' : 'gray'}}
+          style={{ backgroundColor: selectedPlayer && player && selectedPlayer.fid === player.fid ? 'blue' : 'gray' }}
           onClick={() => (handleMoveClick(player.fid))}
         >MOVE</button>
       }
       {
-        possibleSlot && (!player || selectedPlayer.fid !== player.fid) && 
+        possibleSlot && (!player || selectedPlayer.fid !== player.fid) &&
         <button
           onClick={() => handleHereClick(pos, selectedPlayer.fid)}
         >HERE</button>
@@ -266,6 +270,12 @@ const defaultRoster = {
   'c': null,
   '1b': null,
   '2b': null,
+  '3b': null,
+  'ss': null,
+  'of1': null,
+  'of2': null,
+  'of3': null,
+  'util': null,
 }
 
 export default function Team({ }) {
@@ -273,32 +283,31 @@ export default function Team({ }) {
   const [selectedPlayerId, setSelectedPlayerId] = useState(null);
 
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
-
-  console.log(spots);
-  console.log(Object.keys(spots))
+  const blankBench = selectedPlayerId && Object.values(spots).includes(selectedPlayerId);
 
   const handleMoveClick = (fid) => {
     console.log(fid)
     if (fid === selectedPlayerId) setSelectedPlayerId(null);
     else setSelectedPlayerId(fid);
-  }
+  };
 
   const handleHereClick = (pos, fid) => {
-    // console.log(pos);
-    // console.log(fid);
-    // setFirstBaseId(fid);
-    console.log(pos, fid);
     setSpots({
       ...spots,
       [pos]: fid
     })
     setSelectedPlayerId(null);
-  }
+  };
 
   return (
     <div>
-      {selectedPlayer && selectedPlayer.name}
-      {selectedPlayer && selectedPlayer.pos}
+      {
+        selectedPlayer && 
+        <div>
+          <div>Selected Player</div>
+          <div>{selectedPlayer.name} {selectedPlayer.pos}</div>
+        </div>
+      }
       {Object.keys(spots).map((x, i) => (
         <Spot
           key={`${x}${i}`}
@@ -313,7 +322,7 @@ export default function Team({ }) {
       {PLAYERS
         .filter(
           x => x.level === 'maj' &&
-          !Object.values(spots).includes(x.fid)
+            !Object.values(spots).includes(x.fid)
         ).sort(
           (x, y) => y.contract.dollars - x.contract.dollars
         ).map((player, i) => (
@@ -326,18 +335,17 @@ export default function Team({ }) {
             handleHereClick={handleHereClick}
           />
         ))}
+      {
+        blankBench &&
+        <Spot
+          pos="bench"
+          selectedPlayer={selectedPlayer}
+          player={null}
+          handleHereClick={handleHereClick}
+          handleMoveClick={handleMoveClick}
+        />
+      }
     </div>
   );
-}
-
-const starters = {
-  'c': 1,
-  '1b': 1,
-  '2b': 1,
-  'ss': 1,
-  '3b': 1,
-  'of': 3,
-  'util': 1,
-  'rp': 2,
 }
 
