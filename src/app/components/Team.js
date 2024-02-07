@@ -226,7 +226,6 @@ const PLAYERS = [
   },
 ]
 
-// todo handle of
 // todo handle util
 // todo refactor and clean up
 // todo handle move player to bench
@@ -240,7 +239,10 @@ function Spot(props) {
     handleHereClick,
     player
   } = props;
-  const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(pos.toLowerCase());
+  // TODO change to end of string, not all numbers
+  const posWoDigits = pos.replace(/[0-9]/g, '');
+  const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(posWoDigits.toLowerCase());
+  const possibleUtil = selectedPlayer && pos.toLowerCase() === 'util' && selectedPlayer.pos.some(x => UTIL.includes(x));
 
   return (
     <div
@@ -254,7 +256,7 @@ function Spot(props) {
         >MOVE</button>
       }
       {
-        possibleSlot && (!player || selectedPlayer.fid !== player.fid) &&
+        (possibleSlot || possibleUtil) && (!player || selectedPlayer.fid !== player.fid) &&
         <button
           onClick={() => handleHereClick(pos, selectedPlayer.fid)}
         >HERE</button>
@@ -302,23 +304,25 @@ export default function Team({ }) {
   return (
     <div>
       {
-        selectedPlayer && 
+        selectedPlayer &&
         <div>
           <div>Selected Player</div>
           <div>{selectedPlayer.name} {selectedPlayer.pos}</div>
         </div>
       }
-      {Object.keys(spots).map((x, i) => (
-        <Spot
-          key={`${x}${i}`}
-          pos={x}
-          selectedPlayer={selectedPlayer}
-          player={PLAYERS.find(y => y.fid === spots[x])}
-          handleMoveClick={handleMoveClick}
-          handleHereClick={handleHereClick}
-
-        />
-      ))}
+      {Object.keys(spots).map((x, i) => {
+        console.log(x)
+        return (
+          <Spot
+            key={`${x}${i}`}
+            pos={x}
+            selectedPlayer={selectedPlayer}
+            player={PLAYERS.find(y => y.fid === spots[x])}
+            handleMoveClick={handleMoveClick}
+            handleHereClick={handleHereClick}
+          />
+        )
+      })}
       {PLAYERS
         .filter(
           x => x.level === 'maj' &&
