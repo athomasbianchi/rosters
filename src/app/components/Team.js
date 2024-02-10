@@ -226,9 +226,8 @@ const PLAYERS = [
   },
 ]
 
-// todo handle util
-// todo refactor and clean up
 // todo handle move player to bench
+// todo refactor and clean up
 // todo handle "here" button logic for bench destination with player
 
 function Spot(props) {
@@ -239,24 +238,30 @@ function Spot(props) {
     handleHereClick,
     player
   } = props;
-  // TODO change to end of string, not all numbers
-  const posWoDigits = pos.replace(/[0-9]/g, '');
+  const posWoDigits = pos.replace(/[0-9]$/g, '');
   const possibleSlot = selectedPlayer && selectedPlayer.pos.includes(posWoDigits.toLowerCase());
   const possibleUtil = selectedPlayer && pos.toLowerCase() === 'util' && selectedPlayer.pos.some(x => UTIL.includes(x));
+  const emptyBench = !player && pos === 'bench';
+
+  console.log('empty bench: ' + emptyBench)
 
   return (
     <div
       style={{ border: possibleSlot ? 'solid 1px green' : 'none' }}
     >
       <span>{pos}</span>
-      {player &&
+      {
+        player &&
+        (!selectedPlayer || selectedPlayer && selectedPlayer.fid === player.fid) &&
         <button
           style={{ backgroundColor: selectedPlayer && player && selectedPlayer.fid === player.fid ? 'blue' : 'gray' }}
           onClick={() => (handleMoveClick(player.fid))}
         >MOVE</button>
       }
       {
-        (possibleSlot || possibleUtil) && (!player || selectedPlayer.fid !== player.fid) &&
+        ((emptyBench) ||
+        ((possibleSlot || possibleUtil) &&
+        (!player || selectedPlayer.fid !== player.fid))) &&
         <button
           onClick={() => handleHereClick(pos, selectedPlayer.fid)}
         >HERE</button>
@@ -287,6 +292,8 @@ export default function Team({ }) {
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
   const blankBench = selectedPlayerId && Object.values(spots).includes(selectedPlayerId);
 
+  console.log(spots);
+
   const handleMoveClick = (fid) => {
     console.log(fid)
     if (fid === selectedPlayerId) setSelectedPlayerId(null);
@@ -294,11 +301,27 @@ export default function Team({ }) {
   };
 
   const handleHereClick = (pos, fid) => {
-    setSpots({
-      ...spots,
-      [pos]: fid
-    })
-    setSelectedPlayerId(null);
+    console.log(pos);
+    console.log(fid);
+    // 
+    if (pos === 'bench') {
+      console.log(selectedPlayer);
+      const position = Object.keys(spots).find(key => spots[key] === selectedPlayerId)
+      console.log(position);
+      setSpots({
+        ...spots,
+        [position]: null
+      })
+    }
+    else {
+
+      
+      setSpots({
+        ...spots,
+        [pos]: fid
+      })
+    }
+      setSelectedPlayerId(null);
   };
 
   return (

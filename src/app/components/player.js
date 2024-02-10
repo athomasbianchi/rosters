@@ -18,7 +18,7 @@ export default function Player({ player }) {
         {name}
       </div>
       <div>
-        {pos.filter(x => x !== "dh").map(x => (x.toUpperCase()))}
+        {pos.map(x => (x.toUpperCase()))}
       </div>
       {/* Contract Info */}
       <div>
