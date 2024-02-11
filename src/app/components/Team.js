@@ -226,14 +226,14 @@ const PLAYERS = [
   },
 ]
 
-// todo handle move player to bench
+// todo player swap action
 // todo refactor and clean up
-// todo handle "here" button logic for bench destination with player
 
 function Spot(props) {
   const {
     pos,
     selectedPlayer,
+    selectedSpot,
     handleMoveClick,
     handleHereClick,
     player
@@ -243,7 +243,10 @@ function Spot(props) {
   const possibleUtil = selectedPlayer && pos.toLowerCase() === 'util' && selectedPlayer.pos.some(x => UTIL.includes(x));
   const emptyBench = !player && pos === 'bench';
 
-  console.log('empty bench: ' + emptyBench)
+  // selected player is in position
+  // selected player position matches bench player
+  const possibleSwap = player && selectedSpot && player.pos.some(x => x === selectedSpot.toLowerCase());
+  console.log(selectedSpot, player && player.name, player && player.pos, possibleSwap);
 
   return (
     <div
@@ -259,9 +262,17 @@ function Spot(props) {
         >MOVE</button>
       }
       {
-        ((emptyBench) ||
-        ((possibleSlot || possibleUtil) &&
-        (!player || selectedPlayer.fid !== player.fid))) &&
+        (
+          (emptyBench) ||
+          (
+            possibleSwap &&
+            (!player || selectedPlayer.fid !== player.fid)            
+          ) ||
+          (
+            (possibleSlot || possibleUtil) &&
+            (!player || selectedPlayer.fid !== player.fid)
+          )
+        ) &&
         <button
           onClick={() => handleHereClick(pos, selectedPlayer.fid)}
         >HERE</button>
@@ -291,31 +302,23 @@ export default function Team({ }) {
 
   const selectedPlayer = PLAYERS.find(x => x.fid === selectedPlayerId);
   const blankBench = selectedPlayerId && Object.values(spots).includes(selectedPlayerId);
-
-  console.log(spots);
+  const selectedSpot = selectedPlayerId && Object.keys(spots).find(key => spots[key] === selectedPlayerId);
+  console.log(selectedSpot);
 
   const handleMoveClick = (fid) => {
-    console.log(fid)
     if (fid === selectedPlayerId) setSelectedPlayerId(null);
     else setSelectedPlayerId(fid);
   };
 
   const handleHereClick = (pos, fid) => {
-    console.log(pos);
-    console.log(fid);
-    // 
     if (pos === 'bench') {
-      console.log(selectedPlayer);
       const position = Object.keys(spots).find(key => spots[key] === selectedPlayerId)
-      console.log(position);
       setSpots({
         ...spots,
         [position]: null
       })
     }
     else {
-
-      
       setSpots({
         ...spots,
         [pos]: fid
@@ -334,12 +337,12 @@ export default function Team({ }) {
         </div>
       }
       {Object.keys(spots).map((x, i) => {
-        console.log(x)
         return (
           <Spot
             key={`${x}${i}`}
             pos={x}
             selectedPlayer={selectedPlayer}
+            selectedSpot={selectedSpot}
             player={PLAYERS.find(y => y.fid === spots[x])}
             handleMoveClick={handleMoveClick}
             handleHereClick={handleHereClick}
@@ -357,6 +360,7 @@ export default function Team({ }) {
             pos="bench"
             key={i}
             selectedPlayer={selectedPlayer}
+            selectedSpot={selectedSpot}
             player={player}
             handleMoveClick={handleMoveClick}
             handleHereClick={handleHereClick}
@@ -367,6 +371,7 @@ export default function Team({ }) {
         <Spot
           pos="bench"
           selectedPlayer={selectedPlayer}
+          selectedSpot={selectedSpot}
           player={null}
           handleHereClick={handleHereClick}
           handleMoveClick={handleMoveClick}
