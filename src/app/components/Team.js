@@ -246,7 +246,7 @@ function Spot(props) {
   // selected player is in position
   // selected player position matches bench player
   const possibleSwap = player && selectedSpot && player.pos.some(x => x === selectedSpot.toLowerCase());
-  console.log(selectedSpot, player && player.name, player && player.pos, possibleSwap);
+  // console.log(selectedSpot, player && player.name, player && player.pos, possibleSwap);
 
   return (
     <div
@@ -274,7 +274,7 @@ function Spot(props) {
           )
         ) &&
         <button
-          onClick={() => handleHereClick(pos, selectedPlayer.fid)}
+          onClick={() => handleHereClick(pos, selectedPlayer.fid, player)}
         >HERE</button>
       }
       <Player
@@ -304,26 +304,47 @@ export default function Team({ }) {
   const blankBench = selectedPlayerId && Object.values(spots).includes(selectedPlayerId);
   const selectedSpot = selectedPlayerId && Object.keys(spots).find(key => spots[key] === selectedPlayerId);
   console.log(selectedSpot);
+  console.log(spots);
 
   const handleMoveClick = (fid) => {
     if (fid === selectedPlayerId) setSelectedPlayerId(null);
     else setSelectedPlayerId(fid);
   };
 
-  const handleHereClick = (pos, fid) => {
-    if (pos === 'bench') {
-      const position = Object.keys(spots).find(key => spots[key] === selectedPlayerId)
-      setSpots({
-        ...spots,
-        [position]: null
-      })
+  const handleHereClick = (pos, fid, target) => {
+    console.log(pos, fid, target);
+    if (!target) {
+      if (pos === 'bench') {
+        setSpots({
+          ...spots,
+          [selectedSpot]: null
+        })
+      }
+      else {
+        setSpots({
+          ...spots,
+          [pos]: fid
+        })
+      }
+    } else {
+      console.log({[selectedSpot]: target.fid});
+      if (pos === 'bench') {
+        setSpots({
+          ...spots,
+          [selectedSpot]: target.fid,
+          [pos]: fid
+          // [position]: null
+        });
+      }
+      else {
+        setSpots({
+          ...spots,
+          [selectedSpot]: target.fid,
+          [pos]: fid
+        });
+      }
     }
-    else {
-      setSpots({
-        ...spots,
-        [pos]: fid
-      })
-    }
+    
       setSelectedPlayerId(null);
   };
 
